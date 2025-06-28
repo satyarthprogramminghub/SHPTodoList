@@ -1,0 +1,42 @@
+﻿// Displays the list of Todo items in a table
+
+@model List<TodoList.Models.TodoItem>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Todo List</h2>
+        @if (Model.Any())
+        {
+               <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th> <!-- Added to display Description -->
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var todo in Model)
+                    {
+                        <tr>
+                            <td>@todo.Title</td>
+                            <td>@todo.Description</td> <!-- Displays Description -->
+                            <td>@(todo.IsCompleted ? "Completed" : "Pending")</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@todo.Id" class="btn btn-sm btn-warning">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@todo.Id" class="btn btn-sm btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No todo items found. Add a new one!</p>
+        }
+
+    </div>
+</div>
