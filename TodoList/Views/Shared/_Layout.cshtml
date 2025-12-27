@@ -3,32 +3,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SayarthProgrammingHub - Todo List</title>
-    <!-- Bootstrap CSS for responsive styling -->
+    <title>SPH - Todo List App</title>
+    <!-- Bootstrap CSS for styling -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 
 <body>
     <div class="container">
         <header class="d-flex justify-content-between py-3">
-            <h1>Sayarth Programming Hub Todo List</h1>
-            <a asp-controller="Todo" asp-action="Create" class="btn btn-primary">Add Todo</a>
+            <h1>Sayarth Programming Hub - Todo List App</h1>
+            <a asp-controller="Todo" asp-action="Create" class="btn btn-primary align-self-center">
+                <i class="bi bi-plus-square"></i>
+            </a>
+            
         </header>
-        <!-- Displays success messages using TempData -->
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+        <!-- Toast container for success and error messages -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["SuccessMessage"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            @TempData["ErrorMessage"]
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+        </div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-    <!-- Bootstrap JS for interactive components -->
+    <!-- Bootstrap JS for toast functionality -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS to initialize toasts -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
 </body>
 
 </html>

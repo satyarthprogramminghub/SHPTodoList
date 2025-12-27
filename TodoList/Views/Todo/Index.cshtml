@@ -1,42 +1,51 @@
-﻿// Displays the list of Todo items in a table
-
-@model List<TodoList.Models.TodoItem>
-
-
+﻿@model List<TodoList.Models.TodoItem>
 <div class="row">
     <div class="col-md-12">
         <h2>Todo List</h2>
         @if (Model.Any())
         {
-               <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Description</th> <!-- Added to display Description -->
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var todo in Model)
-                    {
-                        <tr>
-                            <td>@todo.Title</td>
-                            <td>@todo.Description</td> <!-- Displays Description -->
-                            <td>@(todo.IsCompleted ? "Completed" : "Pending")</td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@todo.Id" class="btn btn-sm btn-warning">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@todo.Id" class="btn btn-sm btn-danger">Delete</a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var todo in Model)
+                {
+                    <!-- Card for each Todo item -->
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@todo.Title</h5>
+                                <p class="card-text">@todo.Description</p>
+                                <p class="card-text">
+                                    <strong>Status:</strong>
+                                    <span class="@(todo.IsCompleted ? "text-success" : "text-warning")">
+                                        @(todo.IsCompleted ? "Completed" : "Pending")
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between">
+                                <!-- Toggle Completion button -->
+                                <form asp-action="ToggleCompletion" asp-route-id="@todo.Id" method="post">
+                                    <input type="hidden" name="id" value="@todo.Id" />
+                                    <button type="submit" class="btn btn-sm @(todo.IsCompleted ? "btn-outline-secondary" : "btn-outline-success")">
+                                        @(todo.IsCompleted ? "Mark as Pending" : "Mark as Completed")
+                                    </button>
+                                </form>
+                                <div>
+                                    <a asp-action="Edit" asp-route-id="@todo.Id" class="btn btn-sm btn-warning">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@todo.Id" class="btn btn-sm btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         }
         else
         {
-            <p>No todo items found. Add a new one!</p>
+            <p class="text-muted">No todo items found. Add a new one!
+                <a asp-controller="Todo" asp-action="Create" class="btn btn-primary align-self-center">
+                    <i class="bi bi-plus-square"></i>
+                </a>
+            </p>
         }
-
+    
     </div>
 </div>

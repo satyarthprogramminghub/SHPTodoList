@@ -31,10 +31,8 @@ namespace TodoList.Controllers
         // POST: /Todo/Create - Handles form submission to create a Todo item
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(TodoItem todo) 
+        public IActionResult Create(TodoItem todo)
         {
-
-            // Validate that Title is not empty
             if (string.IsNullOrWhiteSpace(todo.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
@@ -46,7 +44,7 @@ namespace TodoList.Controllers
                 TempData["SuccessMessage"] = "Todo item created successfully!";
                 return RedirectToAction(nameof(Index));
             }
-
+            TempData["ErrorMessage"] = "Failed to create Todo item due to invalid input.";
             return View(todo);
         }
 
@@ -56,7 +54,8 @@ namespace TodoList.Controllers
             var todo = _repository.GetById(id);
             if (todo == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Todo item not found.";
+                return RedirectToAction(nameof(Index));
             }
             return View(todo);
         }
@@ -64,9 +63,8 @@ namespace TodoList.Controllers
         // POST: /Todo/Edit/5 - Handles form submission to update a Todo item
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(TodoItem todo) 
+        public IActionResult Edit(TodoItem todo)
         {
-            // Validate that Title is not empty
             if (string.IsNullOrWhiteSpace(todo.Title))
             {
                 ModelState.AddModelError("Title", "Title is required.");
@@ -78,7 +76,7 @@ namespace TodoList.Controllers
                 TempData["SuccessMessage"] = "Todo item updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
-
+            TempData["ErrorMessage"] = "Failed to update Todo item due to invalid input.";
             return View(todo);
         }
 
@@ -88,7 +86,8 @@ namespace TodoList.Controllers
             var todo = _repository.GetById(id);
             if (todo == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Todo item not found.";
+                return RedirectToAction(nameof(Index));
             }
             return View(todo);
         }
@@ -101,10 +100,28 @@ namespace TodoList.Controllers
             var todo = _repository.GetById(id);
             if (todo == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Todo item not found.";
+                return RedirectToAction(nameof(Index));
             }
             _repository.Delete(id);
             TempData["SuccessMessage"] = "Todo item deleted successfully!";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // POST: /Todo/ToggleCompletion/5 - Toggles the IsCompleted status of a Todo item
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ToggleCompletion(int id)
+        {
+            var todo = _repository.GetById(id);
+            if (todo == null)
+            {
+                TempData["ErrorMessage"] = "Todo item not found.";
+                return RedirectToAction(nameof(Index));
+            }
+            todo.IsCompleted = !todo.IsCompleted; // Toggle the completion status
+            _repository.Update(todo);
+            TempData["SuccessMessage"] = $"Todo item marked as {(todo.IsCompleted ? "Completed" : "Pending")}!";
             return RedirectToAction(nameof(Index));
         }
     }
